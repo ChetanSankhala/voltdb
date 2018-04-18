@@ -343,13 +343,15 @@ public class FragmentTask extends TransactionTask
                 // fragment response to the network
                 final int tableSize;
                 final byte fullBacking[];
+                final int drBufferChanged;
                 try {
                     // read the complete size of the buffer used
                     fragResult.readInt();
                     // read number of dependencies (1)
                     fragResult.readInt();
                     // read the dependencyId() -1;
-                    fragResult.readInt();
+                    drBufferChanged = fragResult.readInt();
+                    LOG.debug("DR Buffer" + drBufferChanged);
                     tableSize = fragResult.readInt();
                     fullBacking = new byte[tableSize];
                     // get a copy of the buffer
@@ -364,7 +366,7 @@ public class FragmentTask extends TransactionTask
                        LogKeys.org_voltdb_ExecutionSite_SendingDependency.name(),
                        new Object[] { outputDepId }, null);
                 }
-                currentFragResponse.addDependency(new DependencyPair.BufferDependencyPair(outputDepId, fullBacking, 0, tableSize));
+                currentFragResponse.addDependency(new DependencyPair.BufferDependencyPair(outputDepId, fullBacking, 0, tableSize, drBufferChanged));
             } catch (final EEException e) {
                 hostLog.l7dlog( Level.TRACE, LogKeys.host_ExecutionSite_ExceptionExecutingPF.name(), new Object[] { Encoder.hexEncode(planHash) }, e);
                 currentFragResponse.setStatus(FragmentResponseMessage.UNEXPECTED_ERROR, e);
