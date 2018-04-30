@@ -335,4 +335,5 @@ public interface VoltDBInterface
 
     long getLowestSiteId();
     int getLowestPartitionId();
+    int getKfactor();
 }

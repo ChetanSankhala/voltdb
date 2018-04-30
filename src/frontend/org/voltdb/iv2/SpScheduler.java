@@ -184,10 +184,10 @@ public class SpScheduler extends Scheduler implements SnapshotCompletionInterest
 
     private final boolean IS_KSAFE_CLUSTER;
 
-    SpScheduler(int partitionId, SiteTaskerQueue taskQueue, SnapshotCompletionMonitor snapMonitor, int localSitesCount)
+    SpScheduler(int partitionId, SiteTaskerQueue taskQueue, SnapshotCompletionMonitor snapMonitor)
     {
         super(partitionId, taskQueue);
-        m_pendingTasks = new TransactionTaskQueue(m_tasks, localSitesCount);
+        m_pendingTasks = new TransactionTaskQueue(m_tasks);
         m_snapMonitor = snapMonitor;
         m_durabilityListener = new SpDurabilityListener(this, m_pendingTasks);
         m_uniqueIdGenerator = new UniqueIdGenerator(partitionId, 0);
@@ -195,7 +195,7 @@ public class SpScheduler extends Scheduler implements SnapshotCompletionInterest
         m_repairLogTruncationHandle = getCurrentTxnId();
         // initialized as current txn id in order to release the initial reads into the system
         m_maxScheduledTxnSpHandle = getCurrentTxnId();
-        IS_KSAFE_CLUSTER = VoltDB.instance().getCatalogContext().getDeployment().getCluster().getKfactor() > 0;
+        IS_KSAFE_CLUSTER = VoltDB.instance().getKfactor() > 0;
     }
 
     public void initializeScoreboard(int siteId) {

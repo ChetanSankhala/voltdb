@@ -870,4 +870,9 @@ public class MockVoltDB implements VoltDBInterface
     public int getLowestPartitionId() {
         return 0;
     }
+
+    @Override
+    public int getKfactor() {
+        return 0;
+    }
 }
